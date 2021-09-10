@@ -1,0 +1,106 @@
+body{
+	background:url(../Images/img2.jpg);
+	background-size: cover;
+}
+
+h1{
+	text-align: center;
+	font-size: 50px;
+	color: white;
+}
+
+form{
+	padding-left: 50px auto;
+	width: 290px;
+	color: white;
+	border-radius: 100px 100px;
+
+}
+input{
+	padding: 10px;
+	font-size: inherit;
+}
+input[type="text"]{
+	display: block;
+	margin-bottom: 25px;
+	width: 290px;
+	border: 2px solid steelblue;
+	border-radius: 20px 20px;
+	color: light green;
+
+}
+input[type="email"]{
+	display: block;
+	margin-bottom: 25px;
+	width: 290px;
+	border: 2px solid steelblue;
+	border-radius: 20px 20px;
+	color: light green;
+
+}
+input[type="number"]{
+	display: block;
+	margin-bottom: 25px;
+	width: 290px;
+	border: 2px solid steelblue;
+	border-radius: 20px 20px;
+	color: light green;
+
+}
+
+input[type="password"]{
+	display: block;
+	margin-bottom: 25px;
+	width: 290px;
+	border: 2px solid steelblue;
+	border-radius: 20px 20px;
+	color: black;
+}
+
+
+
+
+
+input[type="radio"]{
+	margin: 0 8px 25px 18px;
+
+}
+input[type="radio"]: first-child {
+	margin-left: 0;
+}
+button {
+	width: 100%;
+	padding: 10px;
+	border-radius: 18px;
+	background-color: #009aff;
+	color: white;
+	font-size: medium;
+}
+input[type=submit]:hover{
+	background: rgb(0, 0, 0, 0.5);
+
+}
+
+
+
+
+.point{
+	margin: auto;
+	padding: auto;
+	width: 350px;
+	background: rgb(0, 0, 0, 0.5);
+}
+
+
+input[type="Button"]{
+	width: 290px;
+	height: 45px;
+	border: none;
+	background: steelblue;
+	color: white;
+	border-radius: 20px 20px;
+}
+
+input[type=Button]:hover{
+	background: rgb(0, 0, 0, 0.5);
+}
