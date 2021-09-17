@@ -20,9 +20,23 @@ if(isset($_GET['id'])){
 					<?php 
 					$theater = $conn->query("SELECT * FROM theater order by name asc");
 					while($row = $theater->fetch_assoc()):
-					?>
-					<option value="<?php echo $row['id'] ?>" <?php echo isset($meta['theater_id']) && $meta['theater_id'] == $row['id'] ? 'selected' :'' ?>><?php echo $row['name'] ?></option>
-			<?php endwhile; ?>
+						?>
+						<option value="<?php echo $row['id'] ?>" <?php echo isset($meta['theater_id']) && $meta['theater_id'] == $row['id'] ? 'selected' :'' ?>><?php echo $row['name'] ?></option>
+					<?php endwhile; ?>
+				</select>
+				
+			</div>
+
+			<div class="form-group">
+				<label for="" class="control-label">Movie Name</label>
+				<select name="movie_id" required="" class="custom-select browser-default" >
+					<option value="" selected>Select a movie</option>
+					<?php 
+					$movie = $conn->query("SELECT * FROM movies where completed = 0");
+					while($row = $movie->fetch_assoc()):
+						?>
+						<option value="<?php echo $row['id'] ?>"><?php echo $row['title'] ?></option>
+					<?php endwhile; ?>
 				</select>
 				
 			</div>
@@ -47,11 +61,11 @@ if(isset($_GET['id'])){
 		$.ajax({
 			url:'ajax.php?action=save_seat',
 			data: new FormData($(this)[0]),
-		    cache: false,
-		    contentType: false,
-		    processData: false,
-		    method: 'POST',
-		    type: 'POST',
+			cache: false,
+			contentType: false,
+			processData: false,
+			method: 'POST',
+			type: 'POST',
 			error:err=>{
 				console.log(err)
 			},
@@ -67,18 +81,18 @@ if(isset($_GET['id'])){
 		})
 
 	})
-			function displayImg(input,_this) {
-			    if (input.files && input.files[0]) {
-			        var reader = new FileReader();
-			        reader.onload = function (e) {
-			        	$('#cover_img').attr('src', e.target.result);
-            			_this.siblings('label').html(input.files[0]['name'])
-            			_this.siblings('input[name="fname"]').val('<?php echo strtotime(date('y-m-d H:i:s')) ?>_'+input.files[0]['name'])
-            			var p = $('<p></p>')
-			            
-			        }
+	function displayImg(input,_this) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#cover_img').attr('src', e.target.result);
+				_this.siblings('label').html(input.files[0]['name'])
+				_this.siblings('input[name="fname"]').val('<?php echo strtotime(date('y-m-d H:i:s')) ?>_'+input.files[0]['name'])
+				var p = $('<p></p>')
 
-			        reader.readAsDataURL(input.files[0]);
-			    }
 			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 </script>

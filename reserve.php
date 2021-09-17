@@ -69,7 +69,9 @@ $duration = $hr.' : '.$min;
 									</div>
 
 									<div class="row ml-1">
-										<button type="submit" class="btn btn-primary w-100 rounded-pill">Pay</button>
+										<button type="submit" class="btn btn-primary w-100 rounded-pill">
+											Pay
+										</button>
 									</div>
 								</form>
 								<!-- Modal -->
@@ -88,21 +90,25 @@ $duration = $hr.' : '.$min;
 												<form action="#">
 													<div class="form-group">
 														<label for="cardNumber">Card Number</label>
-														<input type="email" class="form-control" id="cardNumber" placeholder="Enter your card number" name="number">
+														<input type="email" class="form-control" id="cardNumber" placeholder="Enter your card number" name="number" > <!-- 4242424242424242 -->
 													</div>
 
 													<div class="form-group">
 														<label for="exporation">Expiration</label>
-														<input type="text" class="form-control" id="exporation" name="expiry" placeholder="MM/YY">
-													</div>
+														<input type="text" class="form-control" id="exporation" name="expiry" placeholder="MM/YY" >
+													</div> <!-- 09/21 -->
 
 													<div class="form-group">
 														<label for="cvv">CVV</label>
-														<input type="text" class="form-control" id="cvv" name="cvv" placeholder="Your CVV">
-													</div>
-
-													<button type="button" id="submitPayment" class="btn btn-primary w-100 rounded-pill">Submit</button>
-
+														<input type="text" class="form-control" id="cvv" name="cvv" placeholder="Your CVV" >
+													</div> <!-- 123 -->
+ 
+													<button type="button" id="submitPayment" class="btn btn-primary w-100 rounded-pill flex-items">
+														<div class="spinner-border js-spinner" role="status" style="display: none;">
+															<span class="sr-only">Loading...</span>
+														</div>
+														Submit
+													</button>
 												</form>
 											</div>
 										</div>
@@ -116,7 +122,11 @@ $duration = $hr.' : '.$min;
 		</div>
 	</header>
 </div>
-
+<script>
+	function saveRecord(){
+		
+	}
+</script>
 <script>
 	$('[name="theater_id"]').change(function(){
 		$.ajax({
@@ -150,6 +160,7 @@ $duration = $hr.' : '.$min;
 	$(function() {
 		$('#submitPayment').click(function(e){
 			e.preventDefault();
+			$(".js-spinner").css("display", "block")
 			var expMonthAndYear = $('input[name=expiry]').val().split("/");
 			Stripe.card.createToken({
 				number: $('input[name=number]').val(),
@@ -164,31 +175,41 @@ $duration = $hr.' : '.$min;
 		if (response.error) { 
     // Show appropriate error to user
     swal({
-					text: response.error.message,
-					icon: "error",
-					button: "Ok",
-				});
+    	text: response.error.message,
+    	icon: "error",
+    	button: "Ok",
+    });
+    	$(".js-spinner").css("display", "none")
   } else {
     // Get the token ID:
-    var token = response.id;
+    var cardId = response.card.id;
     // Save token mapping it to customer for all future payment activities
     // alert("sucess")
-    	let moviePrice = $('.js-price').val();
-		let movieQuantity = $('.js-qty').val();
+    let moviePrice = $('.js-price').val();
+    let movieQuantity = $('.js-qty').val();
     $.ajax({
     	url:`payment/submit.php?price=${moviePrice}&quantity=${movieQuantity}`,
     	method:'POST',
     	data:response,
     	success:function(resp){
-    		$('#paymentModal').modal('hide')
-    		swal({
-					text: "Payment Success",
-					icon: "success",
-					button: "Ok",
-				});
-				setTimeOut(() =>{
-					window.location.reload();
-				},3000)
+    		let chargeId = resp['id'];
+    		$.ajax({
+    			url:`admin/ajax.php?action=save_reserve&stripe_id=${cardId}&charge_id=${chargeId}`,
+    			method:'POST',
+    			data:$('#save-reserve').serialize(),
+    			success:function(resp){
+    				$('#paymentModal').modal('hide')
+    				swal({
+    					text: "Payment Success",
+    					icon: "success",
+    					button: "Ok",
+    				});
+    				setTimeout(function(){
+    					window.location.reload();
+    				},3000);
+    			}
+    		});
+    		
     	}
     });
   }

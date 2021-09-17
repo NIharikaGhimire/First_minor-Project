@@ -19,8 +19,7 @@
  <!--  <a href="login.php"class="right">Logout</a> 
   -->
   <a href="Registrationform.php" class="right">Register</a>
-      <a href="payment.php" class="right">Payment</a>
-  
+      
   
 </div>
 

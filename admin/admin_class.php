@@ -85,6 +85,7 @@ Class Action {
 		$data = " theater_id = '".$theater_id."' ";
 		$data .= ", seat_group = '".$seat_group."' ";
 		$data .= ", seat_count = '".$seat_count."' ";
+		$data .= ", movie_id = '".$movie_id."' ";
 		if(empty($id))
 			$save = $this->db->query("INSERT INTO theater_settings set ".$data." ");
 		else
@@ -102,6 +103,8 @@ Class Action {
 	function save_reserve(){
 		
 		$seats = $_POST['seats'];
+		$stripe_id = $_GET['stripe_id'];
+		$charge_id = $_GET['charge_id'];
 		$totalSeats = count($_POST['seats']);
 		extract($_POST);
 		$data = " movie_id = '".$movie_id."' ";
@@ -111,6 +114,9 @@ Class Action {
 		$data .= ", qty = '".$qty."' ";
 		$data .= ", `date` = '".$date."' ";
 		$data .= ", `time` = '".$time."' ";
+		$data .= ", `amount` = '".$amount."' ";
+		$data .= ", `stripe_id` = '".$stripe_id."' ";
+		$data .= ", `charge_id` = '".$charge_id."' ";
 		$data .= ", `is_booked` = '".json_encode($_POST['seats'])."' ";
 
 
@@ -120,10 +126,23 @@ Class Action {
 
 		$result = $row->fetch_array();
 
-		$val = json_encode(array_merge(json_decode($result['seats']),$seats));
+		if($result['seats']){
+			$val = json_encode(array_merge(json_decode($result['seats']),$seats));
+		}else{
+			$val = json_encode($seats);
+		}
 
 		$this->db->query("UPDATE theater_settings set seats = '".$val."' where id = ".$seat_group);
 
+
+		if($save)
+			return 1;
+	}
+
+	// Process to Refund 
+	function process_refund()
+	{
+		$save = $this->db->query("UPDATE books set refund = 1 where id = ".$_GET['booksId']);
 
 		if($save)
 			return 1;

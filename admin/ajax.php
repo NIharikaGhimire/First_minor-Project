@@ -50,3 +50,8 @@ if($action == 'save_reserve'){
 	if($save)
 		echo $save;
 }
+if($action == 'refund'){
+	$save = $crud->process_refund();
+	if($save)
+		echo $save;
+}

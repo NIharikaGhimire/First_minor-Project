@@ -2,7 +2,7 @@
 
 include 'admin/db_connect.php';
 
-$ts = $conn->query("SELECT * FROM theater_settings where theater_id=".$_GET['id']);
+$ts = $conn->query("SELECT * FROM theater_settings where theater_id={$_GET['id']} and movie_id={$_GET['mid']}");
 $data = array();
 while($row=$ts->fetch_assoc()){
 	array_push($data,$row);
@@ -10,7 +10,7 @@ while($row=$ts->fetch_assoc()){
 
 $mov = $conn->query("SELECT * FROM movies where id =".$_GET['mid'])->fetch_array();
 $dur = explode('.', $mov['duration']);
-$entryFee = $mov['entry_fee'];
+$freeEntry = $mov['entry_fee'];
 $dur[1] = isset($dur[1]) ? $dur[1] : 0;
 $hr = sprintf("%'.02d\n",$dur[0]);
 $min = isset($dur[1]) ? (60 * ('.'.$dur[1])) : '0';
@@ -109,7 +109,7 @@ $duration = $hr.' : '.$min;
 	}
 </script>
 <script>
-	let entryFee = "<?= $entryFee ?>";
+			var entryFee = "<?= $freeEntry ?>";
 	$(document).ready(function(){
 		$('#seat_group').change(function(e){
 			e.preventDefault();
@@ -117,12 +117,10 @@ $duration = $hr.' : '.$min;
 			$('#qty').removeAttr('max').attr('max',$(this).find('option[value="'+$(this).val()+'"]').attr('data-count'))
 			const totalSeat = $(this).find('option[value="'+$(this).val()+'"]').attr('data-count');
 			const [allSeats] = $(this).find('option[value="'+$(this).val()+'"]');
-
 			const data = $(allSeats).data('json');
 			const fullName = $(allSeats).data('letter');
 
 			let letter = fullName.charAt(0);
-			const jsonData = data;
 			$('.js-append-sheat').empty();
 			$('#js-visible').css("display","block");
 
@@ -132,7 +130,7 @@ $duration = $hr.' : '.$min;
 
 			for (let i = 1; i <= totalSeat; i++) {
 				let value = letter + i;
-				let status = jsonData.includes(value)
+				let status = data.includes(value)
 				let checkStatus = status ? 'checked' : ''
 				let checkDisable = status ? 'disabled readonly' : ''
 

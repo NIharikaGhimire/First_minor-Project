@@ -18,6 +18,6 @@ if(isset($_POST['id'])){
 		"source"=>$token,
 	));
 
-	echo "<pre>";
-	print_r($data);
+	header('Content-type: application/json');
+	echo json_encode( $data );
 }
